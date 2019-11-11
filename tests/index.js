@@ -8,7 +8,7 @@ const serverUri = "https://www.google.com/";
 const appTitle = "Google";
 
 function buildCapabilities() {
-  switch ("chrome") {
+  switch (process.env.BROWSER) {
     case "ie": {
       process.env.PATH = `${process.env.PATH};${__dirname}/Selenium.WebDriver.IEDriver.3.150.0/driver/;`;
       const capabilities = webdriver.Capabilities.ie();
@@ -27,9 +27,7 @@ function buildCapabilities() {
 
 async function logTitle(browser) {
   await browser.get(serverUri);
-  const title = await browser.getTitle();
-  console.log(title)
-  return title;
+  return await browser.getTitle();
 }
 
 
@@ -43,13 +41,6 @@ describe("Array", function() {
 
 describe("Home Page", function() {
   let browser;
-  it("Get title", async function() {
-    const title = await logTitle(browser);
-    assert.strictEqual(title, appTitle);
-    browser.quit();
-  });
-
-
   before(async () => {
     const capabilities = await buildCapabilities();
     browser = await new webdriver.Builder()
@@ -57,4 +48,9 @@ describe("Home Page", function() {
       .withCapabilities(capabilities)
       .build();
   })
+  it("Get title", async function() {
+    const title = await logTitle(browser);
+    assert.strictEqual(title, appTitle);
+    browser.quit();
+  });
 });
