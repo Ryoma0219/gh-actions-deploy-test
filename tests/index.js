@@ -19,9 +19,6 @@ function buildCapabilities() {
     case "safari": {
       return webdriver.Capabilities.safari();
     }
-    case "chrome": {
-      return webdriver.Capabilities.chrome();
-    }
     default: {
       return;
     }
@@ -49,6 +46,7 @@ describe("Home Page", function() {
   it("Get title", async function() {
     const title = await logTitle(browser);
     assert.strictEqual(title, appTitle);
+    browser.quit();
   });
 
 
@@ -59,8 +57,4 @@ describe("Home Page", function() {
       .withCapabilities(capabilities)
       .build();
   })
-
-  after(function() {
-    browser.quit();
-  });
 });
