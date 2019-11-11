@@ -6,21 +6,9 @@ on:
       - master
 
 jobs:
-  start:
-    name: start
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repo
-        uses: actions/checkout@master
-      - name: Install Dependencies
-        run: yarn
-      - name: Build
-        run: yarn start
-
   e2e-ie:
     name: ie testing
     runs-on: windows-latest
-    needs: start
     steps:
       - uses: actions/checkout@v1
       - uses: warrenbuckley/Setup-Nuget@v1
@@ -32,11 +20,9 @@ jobs:
       - run: yarn test
         env:
           BROWSER: ie
-
   e2e-safari:
-    name: ie testing
+    name: macos testing
     runs-on: macos-latest
-    needs: start
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v1
