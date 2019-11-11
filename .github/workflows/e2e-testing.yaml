@@ -1,0 +1,52 @@
+name: xbrowser
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  start:
+    name: start
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@master
+      - name: Install Dependencies
+        run: yarn
+      - name: Build
+        run: yarn start
+
+  e2e-ie:
+    name: ie testing
+    runs-on: windows-latest
+    needs: start
+    steps:
+      - uses: actions/checkout@v1
+      - uses: warrenbuckley/Setup-Nuget@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - run: yarn install
+      - run: nuget install Selenium.WebDriver.IEDriver -Version 3.150.0
+      - run: yarn test
+        env:
+          BROWSER: ie
+
+  e2e-safari:
+    name: ie testing
+    runs-on: macos-latest
+    needs: start
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - run: yarn install
+      - name: Run safari driver
+        run: |
+          sudo safaridriver --enable
+          safaridriver -p 0 &
+      - run: node scratch.js
+        env:
+          BROWSER: safari
